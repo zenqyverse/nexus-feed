@@ -83,31 +83,6 @@ export default function Sidebar({
       if (onCloseMobile) onCloseMobile();
     };
 
-    const AccordionItem = ({ id, label, children }: { id: string, label: string, children: React.ReactNode }) => {
-    const isOpen = openAccordion === id;
-    return (
-      <div className="space-y-1">
-        <button
-          onClick={() => {
-            if (isCollapsed) setIsCollapsed(false);
-            setOpenAccordion(isOpen ? null : id);
-          }}
-          title={isCollapsed ? label : undefined}
-          className={`w-full flex items-center justify-between px-3 py-2 rounded-md transition-colors ${isOpen && !isCollapsed ? 'text-indigo-400' : 'text-slate-400 hover:text-slate-200 hover:bg-slate-800/50'}`}
-        >
-          <span className="text-xs font-semibold">{isCollapsed ? label.substring(0,2).toUpperCase() : label}</span>
-          {!isCollapsed && (
-            isOpen ? <ChevronDown className="w-4 h-4" /> : <ChevronRight className="w-4 h-4" />
-          )}
-        </button>
-        {isOpen && !isCollapsed && (
-          <div className="pl-4 space-y-1 border-l border-slate-800/30 ml-4 mt-1">
-            {children}
-          </div>
-        )}
-      </div>
-    );
-  };
 
   return (
       <button
@@ -148,15 +123,15 @@ export default function Sidebar({
             setOpenAccordion(isOpen ? null : id);
           }}
           title={isCollapsed ? label : undefined}
-          className={`w-full flex items-center justify-between px-3 py-2 rounded-md transition-colors ${isOpen && !isCollapsed ? 'text-indigo-400' : 'text-slate-400 hover:text-slate-200 hover:bg-slate-800/50'}`}
+          className={`w-full flex items-center justify-between px-3 py-2 rounded-md transition-colors ${isOpen && !isCollapsed ? 'text-indigo-400 font-medium' : 'text-slate-400 hover:text-slate-200 hover:bg-slate-800/50'}`}
         >
-          <span className="text-xs font-semibold">{isCollapsed ? label.substring(0,2).toUpperCase() : label}</span>
+          <span className="text-sm">{isCollapsed ? label.substring(0,2).toUpperCase() : label}</span>
           {!isCollapsed && (
             isOpen ? <ChevronDown className="w-4 h-4" /> : <ChevronRight className="w-4 h-4" />
           )}
         </button>
         {isOpen && !isCollapsed && (
-          <div className="pl-4 space-y-1 border-l border-slate-800/30 ml-4 mt-1">
+          <div className="pl-2 space-y-1 border-l border-slate-700/50 ml-3 mt-1">
             {children}
           </div>
         )}
@@ -242,7 +217,7 @@ export default function Sidebar({
           {/* Folders Group */}
           <div>
             {!isCollapsed && (
-              <p className="px-3 text-[10px] font-bold text-slate-500 uppercase tracking-wider mb-2">Kategori Topik</p>
+              <p className="px-3 text-[10px] font-bold text-slate-500 uppercase tracking-wider mb-2">Kategori</p>
             )}
             <div className="space-y-2">
               <AccordionItem id="platform" label="Kategori Platform">
