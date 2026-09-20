@@ -219,10 +219,10 @@ function HomeApp({ userId, onLogout }: { userId: string; onLogout: () => void })
         />
 
         {/* Main Layout Container - flex-col with h-full prevents page-level scrolling so we can have true split view */}
-        <div className="flex-1 flex flex-col h-full overflow-hidden relative">
+        <div className="flex-1 flex flex-col h-full overflow-y-auto lg:overflow-hidden relative custom-scrollbar">
           
           {/* Page Header & Breadcrumbs */}
-          <div className="flex items-center text-sm text-slate-500 mt-4 md:mt-6 mb-6 px-4 md:px-6 lg:px-8">
+          <div className="flex items-center text-sm text-slate-500 py-3 lg:mt-4 lg:mb-6 px-4 md:px-6 lg:px-8 sticky top-0 bg-slate-50 z-30 lg:static lg:bg-transparent lg:py-0">
             <span>Workspace</span>
             <ChevronRight className="w-4 h-4 mx-2" />
             
@@ -262,7 +262,7 @@ function HomeApp({ userId, onLogout }: { userId: string; onLogout: () => void })
           </div>
 
           {/* Summary Cards */}
-          <div className="grid grid-cols-2 lg:grid-cols-4 gap-2 md:gap-4 mb-6 px-4 md:px-6 lg:px-8">
+          <div className="grid grid-cols-2 lg:grid-cols-4 gap-2 md:gap-4 mt-3 lg:mt-0 mb-6 px-4 md:px-6 lg:px-8 shrink-0">
             <div className="bg-white border border-slate-200 rounded-xl p-2 md:p-4 flex flex-col items-center md:items-start justify-center shadow-sm text-center md:text-left">
               <div className="flex flex-col md:flex-row items-center gap-1 md:gap-2.5 text-slate-500 mb-1 md:mb-2">
                 <div className="p-1 md:p-1.5 bg-indigo-50 rounded-md text-indigo-600 shrink-0">
@@ -309,13 +309,13 @@ function HomeApp({ userId, onLogout }: { userId: string; onLogout: () => void })
           </div>
 
           {/* Split View Container - Takes remaining height, true split view */}
-          <div className="flex-1 grid grid-cols-1 lg:grid-cols-12 gap-6 px-4 md:px-6 lg:px-8 pb-6 min-h-0 items-stretch">
+          <div className="flex-1 grid grid-cols-1 lg:grid-cols-12 gap-6 px-4 md:px-6 lg:px-8 pb-6 lg:min-h-0 items-stretch">
             
             {/* Left Column: Article List & Filters */}
-            <div className={`lg:col-span-5 h-full flex flex-col border border-slate-200 bg-white rounded-xl shadow-sm overflow-hidden ${selectedArticle ? 'hidden lg:flex' : 'flex'}`}>
+            <div className={`lg:col-span-5 lg:h-full flex flex-col border border-slate-200 bg-white rounded-xl shadow-sm overflow-visible lg:overflow-hidden ${selectedArticle ? 'hidden lg:flex' : 'flex'}`}>
               
               {/* Header - Fixed at top of column */}
-              <div className="p-4 border-b border-slate-200 bg-white shrink-0 shadow-sm z-10">
+              <div className="p-4 border-b border-slate-200 bg-white shrink-0 shadow-sm z-20 sticky top-[44px] lg:static lg:z-10 rounded-t-xl">
                 <div className="flex items-center justify-between">
                   <h2 className="text-lg font-semibold text-slate-900">
                     {activeTab === 'feeds' && 'Daftar Artikel'}
@@ -349,7 +349,7 @@ function HomeApp({ userId, onLogout }: { userId: string; onLogout: () => void })
               </div>
 
               {/* Scrollable List Area (Internal scrolling) */}
-              <div className="flex-1 overflow-y-auto custom-scrollbar p-2 md:p-4 bg-slate-50/50">
+              <div className="flex-1 overflow-visible lg:overflow-y-auto custom-scrollbar p-2 md:p-4 bg-slate-50/50">
                 {loading && (activeTab === 'feeds' || (activeTab.startsWith('platform') || activeTab.startsWith('scope') || activeTab.startsWith('pillar')) || activeTab === 'focus') ? (
                   <div className="flex flex-col items-center justify-center py-20 text-slate-400">
                     <Loader2 className="h-8 w-8 animate-spin mb-3 text-indigo-500" />
