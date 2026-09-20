@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from 'react';
+import { useAuth } from '@/context/AuthContext';
 import { 
   Inbox, 
   Target, 
@@ -55,7 +56,7 @@ export default function Sidebar({
   const bookmarkedArticles: any[] = [];
   const favoriteArticles: any[] = [];
   const customFeedsCount = 0;
-  
+  const { user } = useAuth();
   const [isCollapsed, setIsCollapsed] = useState(false);
   const [openAccordion, setOpenAccordion] = useState<string | null>('platform');
 
@@ -257,10 +258,17 @@ export default function Sidebar({
             <button
               onClick={onLogout}
               title="Keluar"
-              className={`w-full flex items-center ${isCollapsed ? 'justify-center' : 'gap-2 px-3'} p-2 text-slate-400 hover:text-rose-400 hover:bg-rose-500/10 rounded-lg transition-colors`}
+              className={`w-full flex items-center ${isCollapsed ? 'justify-center' : 'justify-between px-3'} p-2 text-slate-400 hover:text-rose-400 hover:bg-rose-500/10 rounded-lg transition-colors group`}
             >
-              <LogOut className="w-4 h-4 shrink-0" />
-              {!isCollapsed && <span className="text-sm font-medium">Keluar</span>}
+              <div className="flex items-center gap-2">
+                <LogOut className="w-4 h-4 shrink-0" />
+                {!isCollapsed && <span className="text-sm font-medium">Keluar</span>}
+              </div>
+              {!isCollapsed && user && (
+                <span className="text-[10px] bg-slate-800 group-hover:bg-rose-500/20 px-2 py-0.5 rounded text-slate-400 group-hover:text-rose-400 truncate max-w-[100px]" title={user.email || ""}>
+                  {user.displayName || user.email?.split('@')[0]}
+                </span>
+              )}
             </button>
           )}
           <button
