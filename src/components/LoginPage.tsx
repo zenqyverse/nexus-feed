@@ -8,9 +8,11 @@ import { auth } from '@/lib/firebase';
 import toast from 'react-hot-toast';
 
 export default function LoginPage() {
-  const { login } = useAuth();
+  const { login, register } = useAuth();
+  const [isRegister, setIsRegister] = useState(false);
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [confirmPassword, setConfirmPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState('');
   const [isLoading, setIsLoading] = useState(false);
@@ -21,9 +23,19 @@ export default function LoginPage() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError('');
+    
+    if (isRegister && password !== confirmPassword) {
+      setError('Password tidak cocok.');
+      return;
+    }
+
     setIsLoading(true);
     try {
-      await login(email, password);
+      if (isRegister) {
+        await register(email, password);
+      } else {
+        await login(email, password);
+      }
     } catch (err: any) {
       const code = err?.code || '';
       if (code === 'auth/invalid-credential' || code === 'auth/wrong-password' || code === 'auth/user-not-found') {
@@ -67,7 +79,9 @@ export default function LoginPage() {
           <form onSubmit={handleSubmit} className="space-y-4">
             {/* Email */}
             <div>
-              <label htmlFor="email" className="block text-sm font-medium text-slate-300 mb-1.5">Email</label>
+              <label htmlFor="email" className="block text-sm font-medium text-slate-300 mb-1.5">
+                {isRegister ? 'Username / Email' : 'Email'}
+              </label>
               <div className="relative">
                 <Mail className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
                 <input
@@ -110,6 +124,27 @@ export default function LoginPage() {
               </div>
             </div>
 
+            {/* Confirm Password (Only in Register Mode) */}
+            {isRegister && (
+              <div>
+                <label htmlFor="confirmPassword" className="block text-sm font-medium text-slate-300 mb-1.5">Konfirmasi Password</label>
+                <div className="relative">
+                  <Lock className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
+                  <input
+                    id="confirmPassword"
+                    name="confirmPassword"
+                    type={showPassword ? 'text' : 'password'}
+                    value={confirmPassword}
+                    onChange={(e) => setConfirmPassword(e.target.value)}
+                    required
+                    autoComplete="new-password"
+                    placeholder="????????"
+                    className="w-full pl-10 pr-12 py-3 bg-white/5 border border-white/10 rounded-xl text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all text-sm"
+                  />
+                </div>
+              </div>
+            )}
+
             {/* Error */}
             {error && (
               <div className="bg-red-500/10 border border-red-500/30 rounded-xl px-4 py-3">
@@ -126,13 +161,28 @@ export default function LoginPage() {
               {isLoading ? (
                 <>
                   <Loader2 className="w-4 h-4 animate-spin" />
-                  Masuk...
+                  {isRegister ? 'Mendaftar...' : 'Masuk...'}
                 </>
               ) : (
-                'Masuk'
+                isRegister ? 'Buat Akun' : 'Masuk'
               )}
             </button>
           </form>
+
+          {/* Toggle Button */}
+          <div className="mt-6 text-center">
+            <button
+              onClick={() => {
+                setIsRegister(!isRegister);
+                setError('');
+                setPassword('');
+                setConfirmPassword('');
+              }}
+              className="text-slate-400 hover:text-white text-sm transition-colors"
+            >
+              {isRegister ? 'Sudah punya akun? Masuk di sini' : 'Belum punya akun? Daftar di sini'}
+            </button>
+          </div>
 
           <p className="text-center text-slate-500 text-xs mt-6">
             Akses pribadi · Hanya untuk pemilik ZeinityFeed
