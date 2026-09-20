@@ -31,10 +31,15 @@ export default function LoginPage() {
 
     setIsLoading(true);
     try {
+      let formattedEmail = email.trim();
+      if (formattedEmail && !formattedEmail.includes('@')) {
+        formattedEmail = `${formattedEmail}@nexusfeed.local`;
+      }
+
       if (isRegister) {
-        await register(email, password);
+        await register(formattedEmail, password);
       } else {
-        await login(email, password);
+        await login(formattedEmail, password);
       }
     } catch (err: any) {
       const code = err?.code || '';
@@ -87,12 +92,12 @@ export default function LoginPage() {
                 <input
                   id="email"
                   name="email"
-                  type="email"
+                  type="text"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   required
-                  autoComplete="email"
-                  placeholder="email@anda.com"
+                  autoComplete="username"
+                  placeholder="Username atau Email"
                   className="w-full pl-10 pr-4 py-3 bg-white/5 border border-white/10 rounded-xl text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all text-sm"
                 />
               </div>
