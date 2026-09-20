@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import { X, Trash2, Rss, Pencil, Check, XCircle } from 'lucide-react';
+import { X, Trash2, Rss, Pencil, Check, XCircle, Star } from 'lucide-react';
 import { FeedSource } from '@/config/feeds';
 import toast from 'react-hot-toast';
 
@@ -206,6 +206,17 @@ export default function ManageFeedsModal({
                         </div>
                       </div>
                       <div className="flex items-center gap-1 shrink-0">
+                        <button
+                          onClick={() => onUpdateFeed(feed.id, { isFocus: !feed.isFocus })}
+                          className={`p-2 rounded-lg transition-colors border border-transparent ${
+                            feed.isFocus 
+                              ? 'text-amber-500 hover:text-amber-600 hover:bg-amber-50 hover:border-amber-100' 
+                              : 'text-slate-400 hover:text-amber-500 hover:bg-amber-50 hover:border-amber-100'
+                          }`}
+                          title={feed.isFocus ? "Hapus dari Fokus Utama" : "Jadikan Fokus Utama"}
+                        >
+                          <Star className={`w-4 h-4 ${feed.isFocus ? 'fill-current' : ''}`} />
+                        </button>
                         <button
                           onClick={() => startEdit(feed)}
                           className="p-2 text-slate-400 hover:text-indigo-600 hover:bg-indigo-50 rounded-lg transition-colors border border-transparent hover:border-indigo-100"
