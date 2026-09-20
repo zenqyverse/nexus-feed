@@ -225,11 +225,31 @@ function HomeApp({ userId, onLogout }: { userId: string; onLogout: () => void })
           <div className="flex items-center text-sm text-slate-500 mt-4 md:mt-6 mb-6 px-4 md:px-6 lg:px-8">
             <span>Workspace</span>
             <ChevronRight className="w-4 h-4 mx-2" />
+            
+            {activeTab.startsWith('platform_') && (
+              <>
+                <span className="hidden sm:inline">Kategori Platform</span>
+                <ChevronRight className="hidden sm:block w-4 h-4 mx-2" />
+              </>
+            )}
+            {activeTab.startsWith('scope_') && (
+              <>
+                <span className="hidden sm:inline">Cakupan Wilayah</span>
+                <ChevronRight className="hidden sm:block w-4 h-4 mx-2" />
+              </>
+            )}
+            {activeTab.startsWith('pillar_') && (
+              <>
+                <span className="hidden sm:inline">Fokus Pilar Topik</span>
+                <ChevronRight className="hidden sm:block w-4 h-4 mx-2" />
+              </>
+            )}
+
             <span className="font-medium text-slate-900">
-              {activeTab === 'feeds' && 'Semua Feed'}
+              {activeTab === 'feeds' && 'Semua Artikel'}
               {activeTab === 'focus' && 'Fokus Utama'}
               {activeTab === 'favorites' && 'Favorit'}
-              {activeTab === 'idea_bank' && 'Idea Bank'}
+              {activeTab === 'idea_bank' && 'Tersimpan'}
               {activeTab === 'platform_web_forum' && 'Web Editorial & Forum'}
               {activeTab === 'platform_reddit' && 'Subreddit'}
               {activeTab === 'platform_social' && 'Akun Social Media'}
