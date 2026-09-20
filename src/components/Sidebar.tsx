@@ -14,6 +14,8 @@ import {
   Settings, 
   Plus, 
   X,
+  ChevronDown,
+  ChevronRight,
   LogOut
 } from 'lucide-react';
 
@@ -22,9 +24,14 @@ export type MainTab =
   | 'focus' 
   | 'favorites' 
   | 'idea_bank' 
-  | 'folder_intersection' 
-  | 'folder_gaming' 
-  | 'folder_internet_culture';
+  | 'platform_web_forum'
+  | 'platform_reddit'
+  | 'platform_social'
+  | 'scope_lokal'
+  | 'scope_global'
+  | 'pillar_intersection' 
+  | 'pillar_gaming' 
+  | 'pillar_internet_culture';
 
 interface SidebarProps {
   activeTab: MainTab;
@@ -50,6 +57,7 @@ export default function Sidebar({
   const customFeedsCount = 0;
   
   const [isCollapsed, setIsCollapsed] = useState(false);
+  const [openAccordion, setOpenAccordion] = useState<string | null>('platform');
 
   // Helper to render navigation items
   const NavItem = ({ 
@@ -75,7 +83,33 @@ export default function Sidebar({
       if (onCloseMobile) onCloseMobile();
     };
 
+    const AccordionItem = ({ id, label, children }: { id: string, label: string, children: React.ReactNode }) => {
+    const isOpen = openAccordion === id;
     return (
+      <div className="space-y-1">
+        <button
+          onClick={() => {
+            if (isCollapsed) setIsCollapsed(false);
+            setOpenAccordion(isOpen ? null : id);
+          }}
+          title={isCollapsed ? label : undefined}
+          className={`w-full flex items-center justify-between px-3 py-2 rounded-md transition-colors ${isOpen && !isCollapsed ? 'text-indigo-400' : 'text-slate-400 hover:text-slate-200 hover:bg-slate-800/50'}`}
+        >
+          <span className="text-xs font-semibold">{isCollapsed ? label.substring(0,2).toUpperCase() : label}</span>
+          {!isCollapsed && (
+            isOpen ? <ChevronDown className="w-4 h-4" /> : <ChevronRight className="w-4 h-4" />
+          )}
+        </button>
+        {isOpen && !isCollapsed && (
+          <div className="pl-4 space-y-1 border-l border-slate-800/30 ml-4 mt-1">
+            {children}
+          </div>
+        )}
+      </div>
+    );
+  };
+
+  return (
       <button
         onClick={handleClick}
         title={isCollapsed ? label : undefined}
@@ -101,6 +135,32 @@ export default function Sidebar({
           <div className="absolute top-1 right-1 w-2 h-2 bg-indigo-500 rounded-full"></div>
         )}
       </button>
+    );
+  };
+
+  const AccordionItem = ({ id, label, children }: { id: string, label: string, children: React.ReactNode }) => {
+    const isOpen = openAccordion === id;
+    return (
+      <div className="space-y-1">
+        <button
+          onClick={() => {
+            if (isCollapsed) setIsCollapsed(false);
+            setOpenAccordion(isOpen ? null : id);
+          }}
+          title={isCollapsed ? label : undefined}
+          className={`w-full flex items-center justify-between px-3 py-2 rounded-md transition-colors ${isOpen && !isCollapsed ? 'text-indigo-400' : 'text-slate-400 hover:text-slate-200 hover:bg-slate-800/50'}`}
+        >
+          <span className="text-xs font-semibold">{isCollapsed ? label.substring(0,2).toUpperCase() : label}</span>
+          {!isCollapsed && (
+            isOpen ? <ChevronDown className="w-4 h-4" /> : <ChevronRight className="w-4 h-4" />
+          )}
+        </button>
+        {isOpen && !isCollapsed && (
+          <div className="pl-4 space-y-1 border-l border-slate-800/30 ml-4 mt-1">
+            {children}
+          </div>
+        )}
+      </div>
     );
   };
 
@@ -184,10 +244,21 @@ export default function Sidebar({
             {!isCollapsed && (
               <p className="px-3 text-[10px] font-bold text-slate-500 uppercase tracking-wider mb-2">Kategori Topik</p>
             )}
-            <div className="space-y-1">
-              <NavItem id="folder_intersection" icon={Cpu} label="Kategori Platform" />
-              <NavItem id="folder_gaming" icon={Gamepad2} label="Cakupan Wilayah" />
-              <NavItem id="folder_internet_culture" icon={Globe} label="Fokus Pilar Topik" />
+            <div className="space-y-2">
+              <AccordionItem id="platform" label="Kategori Platform">
+                <NavItem id="platform_web_forum" icon={Cpu} label="Web Editorial & Forum" />
+                <NavItem id="platform_reddit" icon={Globe} label="Subreddit" />
+                <NavItem id="platform_social" icon={Gamepad2} label="Akun Social Media" />
+              </AccordionItem>
+              <AccordionItem id="scope" label="Cakupan Wilayah">
+                <NavItem id="scope_lokal" icon={Target} label="Lokal (Indonesia)" />
+                <NavItem id="scope_global" icon={Globe} label="Global (Internasional)" />
+              </AccordionItem>
+              <AccordionItem id="pillar" label="Fokus Pilar Topik">
+                <NavItem id="pillar_intersection" icon={Cpu} label="Tech & AI" />
+                <NavItem id="pillar_gaming" icon={Gamepad2} label="Gaming" />
+                <NavItem id="pillar_internet_culture" icon={Globe} label="Internet Culture" />
+              </AccordionItem>
             </div>
           </div>
 

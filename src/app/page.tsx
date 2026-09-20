@@ -18,7 +18,7 @@ type FilterPlatform = 'all' | 'web_forum' | 'reddit' | 'social';
 type FilterScope = 'all' | 'lokal' | 'global';
 type FilterPillar = 'all' | 'intersection' | 'gaming' | 'internet_culture';
 type ViewMode = 'grid' | 'list';
-type MainTab = 'feeds' | 'focus' | 'favorites' | 'idea_bank' | 'folder_gaming' | 'folder_internet_culture' | 'folder_intersection';
+type MainTab = 'feeds'  | 'focus'  | 'favorites'  | 'idea_bank'  | 'platform_web_forum' | 'platform_reddit' | 'platform_social' | 'scope_lokal' | 'scope_global' | 'pillar_intersection'  | 'pillar_gaming'  | 'pillar_internet_culture';
 
 interface Article {
   title: string;
@@ -176,9 +176,14 @@ function HomeApp({ userId, onLogout }: { userId: string; onLogout: () => void })
       
       if (activeTab === 'feeds' && !source) return false;
       if (activeTab === 'focus' && !source?.isFocus) return false;
-      if (activeTab === 'folder_gaming' && source?.pillar !== 'gaming') return false;
-      if (activeTab === 'folder_internet_culture' && source?.pillar !== 'internet_culture') return false;
-      if (activeTab === 'folder_intersection' && source?.pillar !== 'intersection') return false;
+      if (activeTab === 'platform_web_forum' && source?.platform !== 'web_forum') return false;
+      if (activeTab === 'platform_reddit' && source?.platform !== 'reddit') return false;
+      if (activeTab === 'platform_social' && source?.platform !== 'social') return false;
+      if (activeTab === 'scope_lokal' && source?.scope !== 'lokal') return false;
+      if (activeTab === 'scope_global' && source?.scope !== 'global') return false;
+      if (activeTab === 'pillar_intersection' && source?.pillar !== 'intersection') return false;
+      if (activeTab === 'pillar_gaming' && source?.pillar !== 'gaming') return false;
+      if (activeTab === 'pillar_internet_culture' && source?.pillar !== 'internet_culture') return false;
 
       if (searchQuery) {
         const query = searchQuery.toLowerCase();
@@ -225,9 +230,14 @@ function HomeApp({ userId, onLogout }: { userId: string; onLogout: () => void })
               {activeTab === 'focus' && 'Fokus Utama'}
               {activeTab === 'favorites' && 'Favorit'}
               {activeTab === 'idea_bank' && 'Idea Bank'}
-              {activeTab === 'folder_gaming' && 'Gaming'}
-              {activeTab === 'folder_internet_culture' && 'Internet Culture'}
-              {activeTab === 'folder_intersection' && 'Tech & AI'}
+              {activeTab === 'platform_web_forum' && 'Web Editorial & Forum'}
+              {activeTab === 'platform_reddit' && 'Subreddit'}
+              {activeTab === 'platform_social' && 'Akun Social Media'}
+              {activeTab === 'scope_lokal' && 'Lokal (Indonesia)'}
+              {activeTab === 'scope_global' && 'Global (Internasional)'}
+              {activeTab === 'pillar_intersection' && 'Tech & AI'}
+              {activeTab === 'pillar_gaming' && 'Gaming'}
+              {activeTab === 'pillar_internet_culture' && 'Internet Culture'}
             </span>
           </div>
 
@@ -282,9 +292,14 @@ function HomeApp({ userId, onLogout }: { userId: string; onLogout: () => void })
                     {activeTab === 'focus' && 'Artikel Fokus'}
                     {activeTab === 'favorites' && 'Artikel Favorit'}
                     {activeTab === 'idea_bank' && 'Tersimpan'}
-                    {activeTab === 'folder_gaming' && 'Topik: Gaming'}
-                    {activeTab === 'folder_internet_culture' && 'Topik: Internet Culture'}
-                    {activeTab === 'folder_intersection' && 'Topik: Tech & AI'}
+                    {activeTab === 'platform_web_forum' && 'Platform: Web Editorial & Forum'}
+                    {activeTab === 'platform_reddit' && 'Platform: Subreddit'}
+                    {activeTab === 'platform_social' && 'Platform: Akun Social Media'}
+                    {activeTab === 'scope_lokal' && 'Wilayah: Lokal (Indonesia)'}
+                    {activeTab === 'scope_global' && 'Wilayah: Global (Internasional)'}
+                    {activeTab === 'pillar_intersection' && 'Fokus: Tech & AI'}
+                    {activeTab === 'pillar_gaming' && 'Fokus: Gaming'}
+                    {activeTab === 'pillar_internet_culture' && 'Fokus: Internet Culture'}
                   </h2>
                   <div className="flex items-center space-x-1 border border-slate-200 rounded-lg p-0.5 bg-slate-50">
                     <button
@@ -305,7 +320,7 @@ function HomeApp({ userId, onLogout }: { userId: string; onLogout: () => void })
 
               {/* Scrollable List Area (Internal scrolling) */}
               <div className="flex-1 overflow-y-auto custom-scrollbar p-2 md:p-4 bg-slate-50/50">
-                {loading && (activeTab === 'feeds' || activeTab.startsWith('folder') || activeTab === 'focus') ? (
+                {loading && (activeTab === 'feeds' || (activeTab.startsWith('platform') || activeTab.startsWith('scope') || activeTab.startsWith('pillar')) || activeTab === 'focus') ? (
                   <div className="flex flex-col items-center justify-center py-20 text-slate-400">
                     <Loader2 className="h-8 w-8 animate-spin mb-3 text-indigo-500" />
                     <span className="text-sm">Menarik data dari sumber...</span>
