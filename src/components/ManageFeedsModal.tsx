@@ -23,6 +23,9 @@ export default function ManageFeedsModal({
   const [editingId, setEditingId] = useState<string | null>(null);
   const [editName, setEditName] = useState('');
   const [editUrl, setEditUrl] = useState('');
+  const [editPlatform, setEditPlatform] = useState<FeedSource['platform']>('web_forum');
+  const [editScope, setEditScope] = useState<FeedSource['scope']>('lokal');
+  const [editPillar, setEditPillar] = useState<FeedSource['pillar']>('intersection');
   const [isSaving, setIsSaving] = useState(false);
 
   if (!isOpen) return null;
@@ -36,12 +39,18 @@ export default function ManageFeedsModal({
     setEditingId(feed.id);
     setEditName(feed.name);
     setEditUrl(feed.url);
+    setEditPlatform(feed.platform);
+    setEditScope(feed.scope);
+    setEditPillar(feed.pillar);
   };
 
   const cancelEdit = () => {
     setEditingId(null);
     setEditName('');
     setEditUrl('');
+    setEditPlatform('web_forum');
+    setEditScope('lokal');
+    setEditPillar('intersection');
   };
 
   const saveEdit = async (feedId: string) => {
@@ -51,7 +60,13 @@ export default function ManageFeedsModal({
     }
     setIsSaving(true);
     try {
-      await onUpdateFeed(feedId, { name: editName.trim(), url: editUrl.trim() });
+      await onUpdateFeed(feedId, { 
+        name: editName.trim(), 
+        url: editUrl.trim(),
+        platform: editPlatform,
+        scope: editScope,
+        pillar: editPillar
+      });
       toast.success('Feed berhasil diperbarui!');
       cancelEdit();
     } catch {
@@ -117,7 +132,46 @@ export default function ManageFeedsModal({
                           placeholder="https://..."
                         />
                       </div>
-                      <div className="flex items-center gap-2 justify-end">
+
+                      <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
+                        <div>
+                          <label className="text-xs font-medium text-slate-500 mb-1 block">Kategori Platform</label>
+                          <select
+                            value={editPlatform}
+                            onChange={(e) => setEditPlatform(e.target.value as any)}
+                            className="w-full px-3 py-2 border border-slate-200 rounded-lg text-sm bg-white text-slate-900 focus:outline-none focus:ring-2 focus:ring-indigo-400 focus:border-transparent"
+                          >
+                            <option value="web_forum">Web Editorial & Forum</option>
+                            <option value="reddit">Reddit (.rss)</option>
+                            <option value="social">Media Sosial (X, Facebook, dsb)</option>
+                          </select>
+                        </div>
+                        <div>
+                          <label className="text-xs font-medium text-slate-500 mb-1 block">Cakupan Wilayah</label>
+                          <select
+                            value={editScope}
+                            onChange={(e) => setEditScope(e.target.value as any)}
+                            className="w-full px-3 py-2 border border-slate-200 rounded-lg text-sm bg-white text-slate-900 focus:outline-none focus:ring-2 focus:ring-indigo-400 focus:border-transparent"
+                          >
+                            <option value="lokal">Lokal (Indonesia)</option>
+                            <option value="global">Global (Internasional)</option>
+                          </select>
+                        </div>
+                        <div>
+                          <label className="text-xs font-medium text-slate-500 mb-1 block">Fokus Pilar Topik</label>
+                          <select
+                            value={editPillar}
+                            onChange={(e) => setEditPillar(e.target.value as any)}
+                            className="w-full px-3 py-2 border border-slate-200 rounded-lg text-sm bg-white text-slate-900 focus:outline-none focus:ring-2 focus:ring-indigo-400 focus:border-transparent"
+                          >
+                            <option value="intersection">Irisan Gaming & Budaya Internet</option>
+                            <option value="gaming">Fokus Gaming & Industri</option>
+                            <option value="internet_culture">Fokus Budaya Internet & Meme</option>
+                          </select>
+                        </div>
+                      </div>
+
+                      <div className="flex items-center gap-2 justify-end pt-2 mt-2 border-t border-slate-100">
                         <button
                           onClick={cancelEdit}
                           disabled={isSaving}

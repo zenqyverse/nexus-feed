@@ -157,25 +157,40 @@ export default function Sidebar({
         
         {/* Logo Area */}
         <div className={`h-16 flex items-center ${isCollapsed ? 'justify-center px-0' : 'justify-between px-6'} border-b border-slate-800 shrink-0`}>
-          <div className="flex items-center gap-2">
-            <div className="w-8 h-8 rounded flex items-center justify-center shrink-0">
-              {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img src="/zeinity.ico" alt="ZeinityFeed Logo" className="w-full h-full object-contain" />
-            </div>
-            {!isCollapsed && (
-              <span className="font-bold text-xl tracking-tight text-white">
-                ZeinityFeed
-              </span>
-            )}
-          </div>
-          
-          {/* Close button for mobile */}
-          {!isCollapsed && (
-            <button 
-              onClick={onCloseMobile}
-              className="md:hidden p-1.5 text-slate-400 hover:text-white hover:bg-slate-800 rounded-lg transition-colors"
+          {!isCollapsed ? (
+            <>
+              <div className="flex items-center gap-2">
+                <div className="w-8 h-8 rounded flex items-center justify-center shrink-0">
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
+                  <img src="/zeinity.ico" alt="ZeinityFeed Logo" className="w-full h-full object-contain" />
+                </div>
+                <span className="font-bold text-xl tracking-tight text-white">
+                  ZeinityFeed
+                </span>
+              </div>
+              <div className="flex items-center gap-1">
+                <button
+                  onClick={() => setIsCollapsed(true)}
+                  title="Perkecil Sidebar"
+                  className="hidden md:flex p-1.5 text-slate-400 hover:text-white hover:bg-slate-800 rounded-lg transition-colors"
+                >
+                  <PanelLeftClose className="w-5 h-5" />
+                </button>
+                <button 
+                  onClick={onCloseMobile}
+                  className="md:hidden p-1.5 text-slate-400 hover:text-white hover:bg-slate-800 rounded-lg transition-colors"
+                >
+                  <X className="w-5 h-5" />
+                </button>
+              </div>
+            </>
+          ) : (
+            <button
+              onClick={() => setIsCollapsed(false)}
+              title="Perluas Sidebar"
+              className="flex items-center justify-center p-2 text-slate-400 hover:text-slate-200 hover:bg-slate-800/50 rounded-lg transition-colors"
             >
-              <X className="w-5 h-5" />
+              <PanelLeftOpen className="w-5 h-5" />
             </button>
           )}
         </div>
@@ -271,13 +286,7 @@ export default function Sidebar({
               )}
             </button>
           )}
-          <button
-            onClick={() => setIsCollapsed(!isCollapsed)}
-            title={isCollapsed ? "Perluas Sidebar" : "Perkecil Sidebar"}
-            className="w-full flex items-center justify-center p-2 text-slate-400 hover:text-slate-200 hover:bg-slate-800/50 rounded-lg transition-colors"
-          >
-            {isCollapsed ? <PanelLeftOpen className="w-5 h-5" /> : <PanelLeftClose className="w-5 h-5" />}
-          </button>
+
         </div>
 
       </aside>
