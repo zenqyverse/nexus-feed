@@ -114,7 +114,7 @@ export default function Sidebar({
     );
   };
 
-  const AccordionItem = ({ id, label, children }: { id: string, label: string, children: React.ReactNode }) => {
+  const AccordionItem = ({ id, label, icon: Icon, children }: { id: string, label: string, icon: any, children: React.ReactNode }) => {
     const isOpen = openAccordion === id;
     return (
       <div className="space-y-1">
@@ -124,9 +124,16 @@ export default function Sidebar({
             setOpenAccordion(isOpen ? null : id);
           }}
           title={isCollapsed ? label : undefined}
-          className={`w-full flex items-center justify-between px-3 py-2 rounded-md transition-colors ${isOpen && !isCollapsed ? 'text-indigo-400 font-medium' : 'text-slate-400 hover:text-slate-200 hover:bg-slate-800/50'}`}
+          className={`w-full flex items-center ${isCollapsed ? 'justify-center px-2' : 'justify-between px-3'} py-2 rounded-md transition-colors group ${
+            isOpen && !isCollapsed 
+              ? 'bg-indigo-500/10 text-indigo-400 font-medium' 
+              : 'text-slate-400 hover:bg-slate-800/50 hover:text-slate-200'
+          }`}
         >
-          <span className="text-sm">{isCollapsed ? label.substring(0,2).toUpperCase() : label}</span>
+          <div className="flex items-center gap-3">
+            <Icon className={`w-5 h-5 ${isOpen && !isCollapsed ? 'text-indigo-400' : 'group-hover:text-slate-200'}`} />
+            {!isCollapsed && <span className="text-sm">{label}</span>}
+          </div>
           {!isCollapsed && (
             isOpen ? <ChevronDown className="w-4 h-4" /> : <ChevronRight className="w-4 h-4" />
           )}
@@ -236,16 +243,16 @@ export default function Sidebar({
               <p className="px-3 text-[10px] font-bold text-slate-500 uppercase tracking-wider mb-2">Kategori</p>
             )}
             <div className="space-y-2">
-              <AccordionItem id="platform" label="Kategori Platform">
+              <AccordionItem id="platform" label="Kategori Platform" icon={Cpu}>
                 <NavItem id="platform_web_forum" icon={Cpu} label="Web Editorial & Forum" />
                 <NavItem id="platform_reddit" icon={Globe} label="Subreddit" />
                 <NavItem id="platform_social" icon={Gamepad2} label="Akun Social Media" />
               </AccordionItem>
-              <AccordionItem id="scope" label="Cakupan Wilayah">
+              <AccordionItem id="scope" label="Cakupan Wilayah" icon={Globe}>
                 <NavItem id="scope_lokal" icon={Target} label="Lokal (Indonesia)" />
                 <NavItem id="scope_global" icon={Globe} label="Global (Internasional)" />
               </AccordionItem>
-              <AccordionItem id="pillar" label="Fokus Pilar Topik">
+              <AccordionItem id="pillar" label="Fokus Pilar Topik" icon={Target}>
                 <NavItem id="pillar_intersection" icon={Cpu} label="Tech & AI" />
                 <NavItem id="pillar_gaming" icon={Gamepad2} label="Gaming" />
                 <NavItem id="pillar_internet_culture" icon={Globe} label="Internet Culture" />
