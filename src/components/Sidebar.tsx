@@ -185,9 +185,9 @@ export default function Sidebar({
               <p className="px-3 text-[10px] font-bold text-slate-500 uppercase tracking-wider mb-2">Kategori Topik</p>
             )}
             <div className="space-y-1">
-              <NavItem id="folder_intersection" icon={Cpu} label="Tech & AI" />
-              <NavItem id="folder_gaming" icon={Gamepad2} label="Gaming" />
-              <NavItem id="folder_internet_culture" icon={Globe} label="Internet Culture" />
+              <NavItem id="folder_intersection" icon={Cpu} label="Kategori Platform" />
+              <NavItem id="folder_gaming" icon={Gamepad2} label="Cakupan Wilayah" />
+              <NavItem id="folder_internet_culture" icon={Globe} label="Fokus Pilar Topik" />
             </div>
           </div>
 
