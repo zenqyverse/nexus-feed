@@ -262,7 +262,7 @@ function HomeApp({ userId, onLogout }: { userId: string; onLogout: () => void })
           </div>
 
           {/* Summary Cards */}
-          <div className="grid grid-cols-3 gap-2 md:gap-4 mb-6 px-4 md:px-6 lg:px-8">
+          <div className="grid grid-cols-2 lg:grid-cols-4 gap-2 md:gap-4 mb-6 px-4 md:px-6 lg:px-8">
             <div className="bg-white border border-slate-200 rounded-xl p-2 md:p-4 flex flex-col items-center md:items-start justify-center shadow-sm text-center md:text-left">
               <div className="flex flex-col md:flex-row items-center gap-1 md:gap-2.5 text-slate-500 mb-1 md:mb-2">
                 <div className="p-1 md:p-1.5 bg-indigo-50 rounded-md text-indigo-600 shrink-0">
@@ -284,6 +284,16 @@ function HomeApp({ userId, onLogout }: { userId: string; onLogout: () => void })
               <p className="text-lg md:text-2xl font-bold text-slate-900">
                 {loading ? <Loader2 className="w-3 h-3 md:w-5 md:h-5 animate-spin text-slate-400 mx-auto md:mx-0" /> : articles.length}
               </p>
+            </div>
+
+            <div className="bg-white border border-slate-200 rounded-xl p-2 md:p-4 flex flex-col items-center md:items-start justify-center shadow-sm text-center md:text-left">
+              <div className="flex flex-col md:flex-row items-center gap-1 md:gap-2.5 text-slate-500 mb-1 md:mb-2">
+                <div className="p-1 md:p-1.5 bg-amber-50 rounded-md text-amber-500 shrink-0">
+                  <Star className="w-3.5 h-3.5 md:w-4 md:h-4" />
+                </div>
+                <span className="font-medium text-[10px] md:text-xs">Favorit</span>
+              </div>
+              <p className="text-lg md:text-2xl font-bold text-slate-900">{favoriteArticles.length}</p>
             </div>
 
             <div className="bg-white border border-slate-200 rounded-xl p-2 md:p-4 flex flex-col items-center md:items-start justify-center shadow-sm text-center md:text-left">
