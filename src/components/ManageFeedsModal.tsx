@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import { X, Trash2, Rss, Pencil, Check, XCircle, Star } from 'lucide-react';
+import { X, Trash2, Rss, Pencil, Check, XCircle, Star, Search, ArrowUpDown, ArrowDownAZ, ArrowUpZA, Clock } from 'lucide-react';
 import { FeedSource } from '@/config/feeds';
 import toast from 'react-hot-toast';
 
@@ -27,6 +27,8 @@ export default function ManageFeedsModal({
   const [editScope, setEditScope] = useState<FeedSource['scope']>('lokal');
   const [editPillar, setEditPillar] = useState<FeedSource['pillar']>('intersection');
   const [isSaving, setIsSaving] = useState(false);
+  const [searchQuery, setSearchQuery] = useState('');
+  const [sortMode, setSortMode] = useState<'none' | 'az' | 'za' | 'newest' | 'oldest'>('none');
 
   if (!isOpen) return null;
 
@@ -76,6 +78,54 @@ export default function ManageFeedsModal({
     }
   };
 
+  const handleSortToggle = () => {
+    const modes: ('none' | 'az' | 'za' | 'newest' | 'oldest')[] = ['none', 'az', 'za', 'newest', 'oldest'];
+    const nextIndex = (modes.indexOf(sortMode) + 1) % modes.length;
+    setSortMode(modes[nextIndex]);
+  };
+
+  let processedFeeds = [...feeds];
+  if (searchQuery.trim()) {
+    const q = searchQuery.toLowerCase();
+    processedFeeds = processedFeeds.filter(f => 
+      f.name.toLowerCase().includes(q) || f.url.toLowerCase().includes(q)
+    );
+  }
+
+  if (sortMode === 'az') {
+    processedFeeds.sort((a, b) => a.name.localeCompare(b.name));
+  } else if (sortMode === 'za') {
+    processedFeeds.sort((a, b) => b.name.localeCompare(a.name));
+  } else if (sortMode === 'newest') {
+    processedFeeds.sort((a, b) => {
+      const timeA = typeof a.createdAt === 'number' ? a.createdAt : (a.createdAt ? new Date(a.createdAt).getTime() : 0);
+      const timeB = typeof b.createdAt === 'number' ? b.createdAt : (b.createdAt ? new Date(b.createdAt).getTime() : 0);
+      return timeB - timeA;
+    });
+  } else if (sortMode === 'oldest') {
+    processedFeeds.sort((a, b) => {
+      const timeA = typeof a.createdAt === 'number' ? a.createdAt : (a.createdAt ? new Date(a.createdAt).getTime() : 0);
+      const timeB = typeof b.createdAt === 'number' ? b.createdAt : (b.createdAt ? new Date(b.createdAt).getTime() : 0);
+      return timeA - timeB;
+    });
+  }
+
+  const getSortIcon = () => {
+    if (sortMode === 'az') return <ArrowDownAZ className="w-4 h-4" />;
+    if (sortMode === 'za') return <ArrowUpZA className="w-4 h-4" />;
+    if (sortMode === 'newest') return <Clock className="w-4 h-4 text-indigo-500" />;
+    if (sortMode === 'oldest') return <Clock className="w-4 h-4 text-slate-400" />;
+    return <ArrowUpDown className="w-4 h-4" />;
+  };
+
+  const getSortTooltip = () => {
+    if (sortMode === 'az') return "Urutkan: A - Z";
+    if (sortMode === 'za') return "Urutkan: Z - A";
+    if (sortMode === 'newest') return "Urutkan: Terbaru";
+    if (sortMode === 'oldest') return "Urutkan: Terlama";
+    return "Urutkan: Default";
+  };
+
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/50 backdrop-blur-sm animate-in fade-in duration-200">
       <div className="bg-white border border-slate-200 rounded-2xl shadow-xl w-full max-w-lg overflow-hidden flex flex-col max-h-[90vh]">
@@ -92,7 +142,30 @@ export default function ManageFeedsModal({
         </div>
 
         {/* Content */}
-        <div className="p-4 overflow-y-auto flex-1 custom-scrollbar bg-slate-50/30">
+        <div className="p-4 flex flex-col gap-4 overflow-y-auto flex-1 custom-scrollbar bg-slate-50/30">
+          
+          {feeds.length > 0 && (
+            <div className="flex items-center gap-2">
+              <div className="relative flex-1">
+                <Search className="w-4 h-4 absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" />
+                <input
+                  type="text"
+                  placeholder="Cari feed..."
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                  className="w-full pl-9 pr-3 py-2 text-sm border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500"
+                />
+              </div>
+              <button
+                onClick={handleSortToggle}
+                title={getSortTooltip()}
+                className="p-2 border border-slate-200 rounded-lg bg-white text-slate-600 hover:bg-slate-50 hover:text-slate-900 transition-colors shrink-0 flex items-center justify-center"
+              >
+                {getSortIcon()}
+              </button>
+            </div>
+          )}
+
           {feeds.length === 0 ? (
             <div className="flex flex-col items-center justify-center py-12 text-center">
               <div className="w-12 h-12 bg-slate-100 rounded-full flex items-center justify-center mb-3">
@@ -103,7 +176,9 @@ export default function ManageFeedsModal({
             </div>
           ) : (
             <div className="space-y-3">
-              {feeds.map((feed) => (
+              {processedFeeds.length === 0 && searchQuery ? (
+              <div className="text-center py-8 text-slate-500 text-sm">Tidak ada feed yang cocok dengan pencarian.</div>
+            ) : processedFeeds.map((feed) => (
                 <div key={feed.id} className="bg-white border border-slate-200 rounded-xl shadow-sm hover:border-slate-300 transition-colors overflow-hidden">
                   {editingId === feed.id ? (
                     /* Edit Mode */

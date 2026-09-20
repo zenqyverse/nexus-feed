@@ -8,6 +8,7 @@ export interface FeedSource {
   categoryLabel: string;
   isCustom?: boolean;
   isFocus?: boolean;
+  createdAt?: string | number;
 }
 
 // All feeds are now stored in Firebase Firestore (per user).
